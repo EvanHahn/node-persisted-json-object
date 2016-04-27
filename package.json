@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "scripts": {
+    "pretest": "standard",
+    "test": "mocha",
+    "test:watch": "mocha -w"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5",
+    "rimraf": "^2.5.2",
+    "standard": "^6.0.8"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "beforeEach",
+      "afterEach"
+    ]
+  }
+}
