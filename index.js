@@ -1,7 +1,6 @@
 const readFile = require('./lib/readFile')
+const ProxyHandler = require('./lib/ProxyHandler')
 
 module.exports = function jsonObject (options) {
-  const data = readFile(options.file)
-
-  return new Proxy(data, {})
+  return new Proxy(readFile(options.file), new ProxyHandler(options.file))
 }

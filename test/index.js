@@ -1,62 +1,122 @@
 const jsonObject = require('..')
 
 const assert = require('assert')
-const path = require('path')
 const fs = require('fs')
-const rimraf = require('rimraf')
-
-const FILE = path.resolve(__dirname, 'tmp-data.json')
+const tmp = require('tmp')
+const rimraf = require('rimraf').sync
 
 describe('jsonObject', function () {
-  beforeEach(function (done) {
-    rimraf(FILE, done)
+  beforeEach(function () {
+    this.file = tmp.tmpNameSync()
+  })
+
+  afterEach(function () {
+    rimraf(this.file)
   })
 
   it('starts off equal to {}', function () {
-    assert.deepEqual(jsonObject({ file: FILE }), {})
+    assert.deepEqual(jsonObject({ file: this.file }), {})
   })
 
-  it("creates the file if it doesn't exist", function (done) {
-    jsonObject({ file: FILE })
+  it("doesn't create the file if you haven't added properties", function () {
+    jsonObject({ file: this.file })
 
-    fs.stat(FILE, (err, stats) => {
-      if (err) { return done(err) }
-      assert(stats.isFile())
-      done()
+    try {
+      fs.statSync(this.file)
+    } catch (err) {
+      assert(err.code === 'ENOENT')
+    }
+  })
+
+  it('reads from an existing file if it already exists', function () {
+    fs.writeFileSync(this.file, '{"hi":5}')
+    assert.deepEqual(jsonObject({ file: this.file }), { hi: 5 })
+  })
+
+  it('throws an error if the file exists and is not valid JSON', function () {
+    fs.writeFileSync(this.file, 'garbage data')
+    assert.throws(function () {
+      jsonObject({ file: this.file })
     })
   })
 
-  it('reads from an existing file if it already exists', function (done) {
-    fs.writeFile(FILE, '{"hi":5}', (err) => {
-      if (err) { return done(err) }
-
-      assert.deepEqual(jsonObject({ file: FILE }), { hi: 5 })
-
-      done()
+  it('throws an error if the file is a directory', function () {
+    fs.mkdirSync(this.file)
+    assert.throws(function () {
+      jsonObject({ file: this.file })
     })
   })
 
-  it('throws an error if the file exists and is not valid JSON', function (done) {
-    fs.writeFile(FILE, 'garbage', (err) => {
-      if (err) { return done(err) }
+  it('can get and set properties', function () {
+    const obj = jsonObject({ file: this.file })
 
-      assert.throws(function () {
-        jsonObject({ file: FILE })
-      })
+    assert.deepEqual(obj, {})
 
-      done()
+    obj.name = 'Peaches'
+    obj.age = 99
+
+    assert.deepEqual(obj, {
+      name: 'Peaches',
+      age: 99
     })
   })
 
-  it('throws an error if the file is a directory', function (done) {
-    fs.mkdir(FILE, (err) => {
-      if (err) { return done(err) }
+  it('modifies its file after setting properties', function () {
+    const obj = jsonObject({ file: this.file })
 
-      assert.throws(function () {
-        jsonObject({ file: FILE })
-      })
+    obj.name = 'Peaches'
+    obj.age = 99
 
-      done()
+    const data = fs.readFileSync(this.file, 'utf8')
+    assert.deepEqual(JSON.parse(data), {
+      name: 'Peaches',
+      age: 99
     })
+  })
+
+  it('throws an error when trying to set a non-serializable property', function () {
+    const obj = jsonObject({ file: this.file })
+
+    const a = {}
+    const b = {}
+    a.friend = b
+    b.friend = a
+
+    assert.throws(function () {
+      obj.property = a
+    })
+  })
+
+  it("doesn't modify the object when trying to set a non-serializable property", function () {
+    const obj = jsonObject({ file: this.file })
+
+    const a = {}
+    const b = {}
+    a.friend = b
+    b.friend = a
+
+    try {
+      obj.property = a
+    } catch (err) { /* ignored */ }
+
+    assert.deepEqual(obj, {})
+  })
+
+  it("doesn't modify the file when trying to set a non-serializable property", function () {
+    const obj = jsonObject({ file: this.file })
+
+    obj.foo = 'boo'
+
+    const a = {}
+    const b = {}
+    a.friend = b
+    b.friend = a
+
+    try {
+      obj.property = a
+    } catch (err) { /* ignored */ }
+
+    const data = fs.readFileSync(this.file, 'utf8')
+    assert.deepEqual(JSON.parse(data), { foo: 'boo' })
   })
 })
