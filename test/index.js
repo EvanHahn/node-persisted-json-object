@@ -124,6 +124,28 @@ describe('jsonObject', function () {
     })
   })
 
+  describe('property existence', function () {
+    it('returns the correct values for `in`', function () {
+      const obj = jsonObject({ file: this.file })
+
+      obj.yas = 'qween'
+
+      assert('yas' in obj)
+      assert('hasOwnProperty' in obj)
+      assert(!('foo' in obj))
+    })
+
+    it('returns the correct values for `hasOwnProperty`', function () {
+      const obj = jsonObject({ file: this.file })
+
+      obj.yas = 'qween'
+
+      assert(obj.hasOwnProperty('yas'))
+      assert(!obj.hasOwnProperty('foo'))
+      assert(!obj.hasOwnProperty('hasOwnProperty'))
+    })
+  })
+
   describe('deletion', function () {
     it('lets you delete properties', function () {
       const obj = jsonObject({ file: this.file })
