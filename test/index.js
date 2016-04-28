@@ -144,6 +144,18 @@ describe('jsonObject', function () {
       assert(!obj.hasOwnProperty('foo'))
       assert(!obj.hasOwnProperty('hasOwnProperty'))
     })
+
+    it('returns the correct values for `Object.keys`', function () {
+      const obj = jsonObject({ file: this.file })
+
+      obj.foo = 123
+      obj.yas = 'qween'
+
+      const actual = Object.keys(obj).sort()
+      const expected = ['foo', 'yas'].sort()
+
+      assert.deepEqual(actual, expected)
+    })
   })
 
   describe('deletion', function () {
