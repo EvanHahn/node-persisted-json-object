@@ -10,9 +10,17 @@ This is an object that functions like a plain JavaScript object, but it saves it
 Basic usage
 -----------
 
+Install it like you might install any Node package:
+
+```js
+npm install persisted-json-object --save
+```
+
 Use it just like a regular JavaScript object:
 
 ```js
+let jsonObject = require('persisted-json-object')
+
 let obj = jsonObject({ file: 'data.json' })
 
 obj.foo = 'boo'
