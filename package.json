@@ -1,5 +1,21 @@
 {
   "name": "persisted-json-object",
+  "author": "Evan Hahn <me@evanhahn.com> (http://evanhahn.com)",
+  "description": "make a normal object persist as JSON",
+  "version": "0.0.0",
+  "keywords": [
+    "persisted",
+    "json"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 6.0.0"
+  },
+  "bugs": "https://github.com/EvanHahn/node-persisted-json-object/issues",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/EvanHahn/node-persisted-json-object.git"
+  },
   "scripts": {
     "pretest": "standard",
     "test": "mocha",
