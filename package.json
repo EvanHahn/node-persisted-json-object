@@ -1,5 +1,5 @@
 {
-  "private": true,
+  "name": "persisted-json-object",
   "scripts": {
     "pretest": "standard",
     "test": "mocha",
