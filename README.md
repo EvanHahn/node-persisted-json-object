@@ -16,7 +16,12 @@ Use it just like a regular JavaScript object:
 let obj = jsonObject({ file: 'data.json' })
 
 obj.foo = 'boo'
+
+obj.temporary = 'soon to be deleted'
+delete obj.temporary
+
 obj.grue = 'you'
+
 obj.coolNumbers = [420, 666, 69, 12]
 ```
 
