@@ -119,4 +119,25 @@ describe('jsonObject', function () {
     const data = fs.readFileSync(this.file, 'utf8')
     assert.deepEqual(JSON.parse(data), { foo: 'boo' })
   })
+
+  it('lets you delete properties', function () {
+    const obj = jsonObject({ file: this.file })
+
+    obj.foo = 'boo'
+    obj.yas = 'qween'
+    delete obj.foo
+
+    assert.deepEqual(obj, { yas: 'qween' })
+  })
+
+  it('saves property deletions', function () {
+    const obj = jsonObject({ file: this.file })
+
+    obj.foo = 'boo'
+    obj.yas = 'qween'
+    delete obj.foo
+
+    const data = fs.readFileSync(this.file, 'utf8')
+    assert.deepEqual(JSON.parse(data), { yas: 'qween' })
+  })
 })
