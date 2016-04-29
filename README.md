@@ -12,7 +12,7 @@ Basic usage
 
 Install it like you might install any Node package:
 
-```js
+```sh
 npm install persisted-json-object --save
 ```
 
