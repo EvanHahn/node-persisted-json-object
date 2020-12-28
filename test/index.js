@@ -3,15 +3,14 @@ const jsonObject = require('..')
 const assert = require('assert')
 const fs = require('fs')
 const tmp = require('tmp')
-const rimraf = require('rimraf').sync
 
 describe('jsonObject', function () {
   beforeEach(function () {
     this.file = tmp.tmpNameSync()
   })
 
-  afterEach(function () {
-    rimraf(this.file)
+  afterEach(function (done) {
+    fs.rm(this.file, { force: true, recursive: true, maxRetries: 2 }, done)
   })
 
   describe('initialization', function () {

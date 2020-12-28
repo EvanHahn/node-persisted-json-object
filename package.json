@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "mocha": "^8.2.1",
-    "rimraf": "^3.0.2",
     "standard": "^16.0.3",
     "tmp": "^0.2.1"
   },
