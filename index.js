@@ -52,12 +52,9 @@ class ProxyHandler {
   deleteProperty(target, key) {
     const testTarget = { ...target, [key]: undefined };
 
-    const json = JSON.stringify(testTarget);
-    fs.writeFileSync(this.file, json, "utf8");
+    fs.writeFileSync(this.file, JSON.stringify(testTarget), "utf8");
 
-    delete target[key];
-
-    return true;
+    return delete target[key];
   }
 }
 
