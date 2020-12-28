@@ -1,7 +1,6 @@
 Persisted JSON objects for Node
 ===============================
 [![Build Status](https://travis-ci.org/EvanHahn/node-persisted-json-object.svg?branch=master)](https://travis-ci.org/EvanHahn/node-persisted-json-object)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 *Requires Node 6 or greater.*
 
