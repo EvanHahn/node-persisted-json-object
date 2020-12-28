@@ -39,14 +39,21 @@ describe("jsonObject", function () {
 
     it("throws an error if the file exists and is not valid JSON", function () {
       fs.writeFileSync(this.file, "garbage data");
-      assert.throws(function () {
+      assert.throws(() => {
+        jsonObject({ file: this.file });
+      });
+    });
+
+    it("throws an error if the file exists and is not an object", function () {
+      fs.writeFileSync(this.file, JSON.stringify([1, 2, 3]));
+      assert.throws(() => {
         jsonObject({ file: this.file });
       });
     });
 
     it("throws an error if the file is a directory", function () {
       fs.mkdirSync(this.file);
-      assert.throws(function () {
+      assert.throws(() => {
         jsonObject({ file: this.file });
       });
     });

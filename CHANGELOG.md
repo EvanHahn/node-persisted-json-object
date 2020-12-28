@@ -9,6 +9,7 @@
 ### Fixed
 
 - Removed extraneous files from package
+- More resilience against race conditions
 
 ### Removed
 

@@ -2,37 +2,21 @@ const fs = require("fs");
 const ProxyHandler = require("./lib/ProxyHandler");
 
 function readFile(file) {
-  let stats;
-
+  let parsed;
   try {
-    stats = fs.statSync(file);
+    parsed = JSON.parse(fs.readFileSync(file, "utf8"));
   } catch (err) {
-    if (err.code !== "ENOENT") {
-      throw err;
-    }
-
-    return {};
-  }
-
-  if (stats.isFile()) {
-    const rawJson = fs.readFileSync(file, "utf8");
-
-    if (!rawJson.trim()) {
+    if (err.code === "ENOENT") {
       return {};
     }
-
-    try {
-      return JSON.parse(rawJson);
-    } catch (err) {
-      if (err instanceof SyntaxError) {
-        throw new Error(`Could not parse ${file} as JSON`);
-      } else {
-        throw err;
-      }
-    }
-  } else {
-    throw new Error(`${file} is not a valid file`);
+    throw err;
   }
+
+  if (typeof parsed === "object" && parsed && !Array.isArray(parsed)) {
+    return parsed;
+  }
+
+  throw new Error("File does not contain a JSON object");
 }
 
 module.exports = function jsonObject(options) {
