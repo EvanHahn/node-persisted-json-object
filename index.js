@@ -28,16 +28,17 @@ class ProxyHandler {
   }
 
   set(target, key, value) {
-    const testTarget = Object.assign({}, target, {
-      [key]: value,
-    });
-
     let json;
     try {
-      json = JSON.stringify(testTarget);
+      json = JSON.stringify({
+        ...target,
+        [key]: value,
+      });
     } catch (err) {
       throw new Error(
-        `Setting ${key} to ${value} would make this object unable to be serialized as JSON.`
+        `Setting ${JSON.stringify(key)} to ${JSON.stringify(
+          value
+        )} would make this object unable to be serialized as JSON.`
       );
     }
 
@@ -49,8 +50,7 @@ class ProxyHandler {
   }
 
   deleteProperty(target, key) {
-    const testTarget = Object.assign({}, target);
-    delete testTarget[key];
+    const testTarget = { ...target, [key]: undefined };
 
     const json = JSON.stringify(testTarget);
     fs.writeFileSync(this.file, json, "utf8");
