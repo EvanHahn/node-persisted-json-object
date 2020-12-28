@@ -1,26 +1,24 @@
-Persisted JSON objects for Node
-===============================
+# Persisted JSON objects for Node
 
 This is an object that functions like a plain JavaScript object, but it saves itself to the file system after every change. Uses [`Proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy).
 
-Usage
------
+## Usage
 
 Use it just like a regular JavaScript object:
 
 ```js
-let jsonObject = require('persisted-json-object')
+let jsonObject = require("persisted-json-object");
 
-let obj = jsonObject({ file: 'data.json' })
+let obj = jsonObject({ file: "data.json" });
 
-obj.foo = 'boo'
+obj.foo = "boo";
 
-obj.temporary = 'soon to be deleted'
-delete obj.temporary
+obj.temporary = "soon to be deleted";
+delete obj.temporary;
 
-obj.grue = 'you'
+obj.grue = "you";
 
-obj.coolNumbers = [420, 666, 69, 12]
+obj.coolNumbers = [420, 666, 69, 12];
 ```
 
 After these changes, `data.json` will look like this (some formatting added):

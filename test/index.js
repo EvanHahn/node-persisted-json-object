@@ -1,182 +1,186 @@
-const jsonObject = require('..')
+const jsonObject = require("..");
 
-const assert = require('assert')
-const fs = require('fs')
-const tmp = require('tmp')
+const assert = require("assert");
+const fs = require("fs");
+const tmp = require("tmp");
 
-describe('jsonObject', function () {
+describe("jsonObject", function () {
   beforeEach(function () {
-    this.file = tmp.tmpNameSync()
-  })
+    this.file = tmp.tmpNameSync();
+  });
 
   afterEach(function (done) {
-    fs.rm(this.file, { force: true, recursive: true, maxRetries: 2 }, done)
-  })
+    fs.rm(this.file, { force: true, recursive: true, maxRetries: 2 }, done);
+  });
 
-  describe('initialization', function () {
-    it('starts off equal to {}', function () {
-      assert.deepEqual(jsonObject({ file: this.file }), {})
-    })
+  describe("initialization", function () {
+    it("starts off equal to {}", function () {
+      assert.deepEqual(jsonObject({ file: this.file }), {});
+    });
 
     it("doesn't create the file if you haven't added properties", function () {
-      jsonObject({ file: this.file })
+      jsonObject({ file: this.file });
 
       try {
-        fs.statSync(this.file)
+        fs.statSync(this.file);
       } catch (err) {
-        assert(err.code === 'ENOENT')
+        assert(err.code === "ENOENT");
       }
-    })
+    });
 
-    it('reads from an existing file if it already exists', function () {
-      fs.writeFileSync(this.file, '{"hi":5}')
-      assert.deepEqual(jsonObject({ file: this.file }), { hi: 5 })
-    })
+    it("reads from an existing file if it already exists", function () {
+      fs.writeFileSync(this.file, '{"hi":5}');
+      assert.deepEqual(jsonObject({ file: this.file }), { hi: 5 });
+    });
 
-    it('throws an error if the file exists and is not valid JSON', function () {
-      fs.writeFileSync(this.file, 'garbage data')
+    it("throws an error if the file exists and is not valid JSON", function () {
+      fs.writeFileSync(this.file, "garbage data");
       assert.throws(function () {
-        jsonObject({ file: this.file })
-      })
-    })
+        jsonObject({ file: this.file });
+      });
+    });
 
-    it('throws an error if the file is a directory', function () {
-      fs.mkdirSync(this.file)
+    it("throws an error if the file is a directory", function () {
+      fs.mkdirSync(this.file);
       assert.throws(function () {
-        jsonObject({ file: this.file })
-      })
-    })
-  })
+        jsonObject({ file: this.file });
+      });
+    });
+  });
 
-  describe('basic property access', function () {
-    it('can get and set properties', function () {
-      const obj = jsonObject({ file: this.file })
+  describe("basic property access", function () {
+    it("can get and set properties", function () {
+      const obj = jsonObject({ file: this.file });
 
-      assert.deepEqual(obj, {})
+      assert.deepEqual(obj, {});
 
-      obj.name = 'Peaches'
-      obj.age = 99
+      obj.name = "Peaches";
+      obj.age = 99;
 
       assert.deepEqual(obj, {
-        name: 'Peaches',
-        age: 99
-      })
-    })
+        name: "Peaches",
+        age: 99,
+      });
+    });
 
-    it('modifies its file after setting properties', function () {
-      const obj = jsonObject({ file: this.file })
+    it("modifies its file after setting properties", function () {
+      const obj = jsonObject({ file: this.file });
 
-      obj.name = 'Peaches'
-      obj.age = 99
+      obj.name = "Peaches";
+      obj.age = 99;
 
-      const data = fs.readFileSync(this.file, 'utf8')
+      const data = fs.readFileSync(this.file, "utf8");
       assert.deepEqual(JSON.parse(data), {
-        name: 'Peaches',
-        age: 99
-      })
-    })
+        name: "Peaches",
+        age: 99,
+      });
+    });
 
-    it('throws an error when trying to set a non-serializable property', function () {
-      const obj = jsonObject({ file: this.file })
+    it("throws an error when trying to set a non-serializable property", function () {
+      const obj = jsonObject({ file: this.file });
 
-      const a = {}
-      const b = {}
-      a.friend = b
-      b.friend = a
+      const a = {};
+      const b = {};
+      a.friend = b;
+      b.friend = a;
 
       assert.throws(function () {
-        obj.property = a
-      })
-    })
+        obj.property = a;
+      });
+    });
 
     it("doesn't modify the object when trying to set a non-serializable property", function () {
-      const obj = jsonObject({ file: this.file })
+      const obj = jsonObject({ file: this.file });
 
-      const a = {}
-      const b = {}
-      a.friend = b
-      b.friend = a
+      const a = {};
+      const b = {};
+      a.friend = b;
+      b.friend = a;
 
       try {
-        obj.property = a
-      } catch (err) { /* ignored */ }
+        obj.property = a;
+      } catch (err) {
+        /* ignored */
+      }
 
-      assert.deepEqual(obj, {})
-    })
+      assert.deepEqual(obj, {});
+    });
 
     it("doesn't modify the file when trying to set a non-serializable property", function () {
-      const obj = jsonObject({ file: this.file })
+      const obj = jsonObject({ file: this.file });
 
-      obj.foo = 'boo'
+      obj.foo = "boo";
 
-      const a = {}
-      const b = {}
-      a.friend = b
-      b.friend = a
+      const a = {};
+      const b = {};
+      a.friend = b;
+      b.friend = a;
 
       try {
-        obj.property = a
-      } catch (err) { /* ignored */ }
+        obj.property = a;
+      } catch (err) {
+        /* ignored */
+      }
 
-      const data = fs.readFileSync(this.file, 'utf8')
-      assert.deepEqual(JSON.parse(data), { foo: 'boo' })
-    })
-  })
+      const data = fs.readFileSync(this.file, "utf8");
+      assert.deepEqual(JSON.parse(data), { foo: "boo" });
+    });
+  });
 
-  describe('property existence', function () {
-    it('returns the correct values for `in`', function () {
-      const obj = jsonObject({ file: this.file })
+  describe("property existence", function () {
+    it("returns the correct values for `in`", function () {
+      const obj = jsonObject({ file: this.file });
 
-      obj.yas = 'qween'
+      obj.yas = "qween";
 
-      assert('yas' in obj)
-      assert('hasOwnProperty' in obj)
-      assert(!('foo' in obj))
-    })
+      assert("yas" in obj);
+      assert("hasOwnProperty" in obj);
+      assert(!("foo" in obj));
+    });
 
-    it('returns the correct values for `hasOwnProperty`', function () {
-      const obj = jsonObject({ file: this.file })
+    it("returns the correct values for `hasOwnProperty`", function () {
+      const obj = jsonObject({ file: this.file });
 
-      obj.yas = 'qween'
+      obj.yas = "qween";
 
-      assert(obj.hasOwnProperty('yas'))
-      assert(!obj.hasOwnProperty('foo'))
-      assert(!obj.hasOwnProperty('hasOwnProperty'))
-    })
+      assert(obj.hasOwnProperty("yas"));
+      assert(!obj.hasOwnProperty("foo"));
+      assert(!obj.hasOwnProperty("hasOwnProperty"));
+    });
 
-    it('returns the correct values for `Object.keys`', function () {
-      const obj = jsonObject({ file: this.file })
+    it("returns the correct values for `Object.keys`", function () {
+      const obj = jsonObject({ file: this.file });
 
-      obj.foo = 123
-      obj.yas = 'qween'
+      obj.foo = 123;
+      obj.yas = "qween";
 
-      const actual = Object.keys(obj).sort()
-      const expected = ['foo', 'yas'].sort()
+      const actual = Object.keys(obj).sort();
+      const expected = ["foo", "yas"].sort();
 
-      assert.deepEqual(actual, expected)
-    })
-  })
+      assert.deepEqual(actual, expected);
+    });
+  });
 
-  describe('deletion', function () {
-    it('lets you delete properties', function () {
-      const obj = jsonObject({ file: this.file })
+  describe("deletion", function () {
+    it("lets you delete properties", function () {
+      const obj = jsonObject({ file: this.file });
 
-      obj.foo = 'boo'
-      obj.yas = 'qween'
-      delete obj.foo
+      obj.foo = "boo";
+      obj.yas = "qween";
+      delete obj.foo;
 
-      assert.deepEqual(obj, { yas: 'qween' })
-    })
+      assert.deepEqual(obj, { yas: "qween" });
+    });
 
-    it('saves property deletions', function () {
-      const obj = jsonObject({ file: this.file })
+    it("saves property deletions", function () {
+      const obj = jsonObject({ file: this.file });
 
-      obj.foo = 'boo'
-      obj.yas = 'qween'
-      delete obj.foo
+      obj.foo = "boo";
+      obj.yas = "qween";
+      delete obj.foo;
 
-      const data = fs.readFileSync(this.file, 'utf8')
-      assert.deepEqual(JSON.parse(data), { yas: 'qween' })
-    })
-  })
-})
+      const data = fs.readFileSync(this.file, "utf8");
+      assert.deepEqual(JSON.parse(data), { yas: "qween" });
+    });
+  });
+});

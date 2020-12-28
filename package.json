@@ -17,13 +17,18 @@
     "url": "git://github.com/EvanHahn/node-persisted-json-object.git"
   },
   "scripts": {
-    "pretest": "standard",
+    "pretest": "npm run lint",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint:eslint": "eslint .",
+    "lint:prettier": "prettier --check \"**/*.{md,js,json}\"",
+    "format": "prettier --write \"**/*.{md,js,json}\"",
     "test": "mocha",
     "test:watch": "mocha -w"
   },
   "devDependencies": {
+    "eslint": "^7.13.0",
     "mocha": "^8.2.1",
-    "standard": "^16.0.3",
+    "prettier": "^2.2.1",
     "tmp": "^0.2.1"
   },
   "standard": {
