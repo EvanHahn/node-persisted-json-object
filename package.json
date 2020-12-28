@@ -16,6 +16,12 @@
     "type": "git",
     "url": "git://github.com/EvanHahn/node-persisted-json-object.git"
   },
+  "files": [
+    "LICENSE.md",
+    "CHANGELOG.md",
+    "README.md",
+    "index.js"
+  ],
   "scripts": {
     "pretest": "npm run lint",
     "lint": "npm run lint:eslint && npm run lint:prettier",
