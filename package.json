@@ -22,10 +22,10 @@
     "test:watch": "mocha -w"
   },
   "devDependencies": {
-    "mocha": "^2.4.5",
-    "rimraf": "^2.5.2",
-    "standard": "^6.0.8",
-    "tmp": "0.0.28"
+    "mocha": "^8.2.1",
+    "rimraf": "^3.0.2",
+    "standard": "^16.0.3",
+    "tmp": "^0.2.1"
   },
   "standard": {
     "globals": [
