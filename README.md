@@ -1,8 +1,5 @@
 Persisted JSON objects for Node
 ===============================
-[![Build Status](https://travis-ci.org/EvanHahn/node-persisted-json-object.svg?branch=master)](https://travis-ci.org/EvanHahn/node-persisted-json-object)
-
-*Requires Node 6 or greater.*
 
 This is an object that functions like a plain JavaScript object, but it saves itself to the file system after every change. Uses [`Proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy).
 
