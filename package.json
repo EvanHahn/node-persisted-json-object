@@ -28,8 +28,7 @@
   "devDependencies": {
     "eslint": "^7.13.0",
     "mocha": "^8.2.1",
-    "prettier": "^2.2.1",
-    "tmp": "^0.2.1"
+    "prettier": "^2.2.1"
   },
   "standard": {
     "globals": [

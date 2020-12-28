@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Don't create the file until you've written something to it
+
 ### Fixed
 
 - Removed extraneous files from package

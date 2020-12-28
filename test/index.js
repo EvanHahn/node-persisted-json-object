@@ -2,11 +2,17 @@ const jsonObject = require("..");
 
 const assert = require("assert");
 const fs = require("fs");
-const tmp = require("tmp");
+const path = require("path");
+const os = require("os");
 
 describe("jsonObject", function () {
   beforeEach(function () {
-    this.file = tmp.tmpNameSync();
+    this.file = path.join(
+      os.tmpdir(),
+      `persisted-json-object-test-${Date.now()}-${Math.random()
+        .toString()
+        .substr(2)}`
+    );
   });
 
   afterEach(function (done) {
@@ -21,11 +27,9 @@ describe("jsonObject", function () {
     it("doesn't create the file if you haven't added properties", function () {
       jsonObject({ file: this.file });
 
-      try {
-        fs.statSync(this.file);
-      } catch (err) {
-        assert(err.code === "ENOENT");
-      }
+      assert.throws(() => {
+        fs.accessSync(this.file, fs.constants.R_OK);
+      });
     });
 
     it("reads from an existing file if it already exists", function () {
@@ -48,7 +52,7 @@ describe("jsonObject", function () {
     });
   });
 
-  describe("basic property access", function () {
+  describe("property access", function () {
     it("can get and set properties", function () {
       const obj = jsonObject({ file: this.file });
 
@@ -124,40 +128,6 @@ describe("jsonObject", function () {
 
       const data = fs.readFileSync(this.file, "utf8");
       assert.deepEqual(JSON.parse(data), { foo: "boo" });
-    });
-  });
-
-  describe("property existence", function () {
-    it("returns the correct values for `in`", function () {
-      const obj = jsonObject({ file: this.file });
-
-      obj.yas = "qween";
-
-      assert("yas" in obj);
-      assert("hasOwnProperty" in obj);
-      assert(!("foo" in obj));
-    });
-
-    it("returns the correct values for `hasOwnProperty`", function () {
-      const obj = jsonObject({ file: this.file });
-
-      obj.yas = "qween";
-
-      assert(obj.hasOwnProperty("yas"));
-      assert(!obj.hasOwnProperty("foo"));
-      assert(!obj.hasOwnProperty("hasOwnProperty"));
-    });
-
-    it("returns the correct values for `Object.keys`", function () {
-      const obj = jsonObject({ file: this.file });
-
-      obj.foo = 123;
-      obj.yas = "qween";
-
-      const actual = Object.keys(obj).sort();
-      const expected = ["foo", "yas"].sort();
-
-      assert.deepEqual(actual, expected);
     });
   });
 
